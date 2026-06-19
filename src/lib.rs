@@ -639,9 +639,9 @@ fn decode_lzfse<R: Read, W: Write>(src: &mut R, dest: &mut W, dest_size: usize) 
 }
 
 fn decode_lzma<R: Read, W: Write>(src: &mut R, dest: &mut W) -> Result<usize> {
-    // UDIF "LZMA" chunks are XZ streams (magic "\xfd7zXZ\x00").
     let mut input = BufReader::new(src);
     let mut out_buf = Vec::new();
+    // UDIF "LZMA" chunks are XZ streams (magic "\xfd7zXZ\x00").
     lzma_rs::xz_decompress(&mut input, &mut out_buf)
         .map_err(|_| Error::InvalidInput("lzma decompression failed".into()))?;
     dest.write_all(&out_buf)?;
